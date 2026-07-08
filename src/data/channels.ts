@@ -1,0 +1,34 @@
+export const channels = [
+  {
+    name: "Cine Ação",
+    icon: "💥",
+    category: "Filmes",
+    now: "Filme de ação",
+    video: "",
+    next: ["Ação 2", "Ação 3", "Ação 4"],
+  },
+  {
+    name: "Cine Séries",
+    icon: "📺",
+    category: "Séries",
+    now: "Episódio atual",
+    video: "",
+    next: ["Episódio 2", "Episódio 3"],
+  },
+  {
+    name: "Anime Xpace",
+    icon: "🍥",
+    category: "Anime",
+    now: "Anime atual",
+    video: "",
+    next: ["Anime 2", "Anime 3"],
+  },
+  {
+    name: "Xpace Sports",
+    icon: "⚽",
+    category: "Esportes",
+    now: "Jogo ao vivo",
+    video: "",
+    next: ["Jogo 2", "Jogo 3"],
+  },
+]
