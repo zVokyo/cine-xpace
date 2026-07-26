@@ -1,0 +1,39 @@
+@media (max-width: 1024px) {
+  main {
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+  }
+}
