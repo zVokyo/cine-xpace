@@ -8,6 +8,7 @@
 @import "./header.css";
 @import "./sidebar.css";
 @import "./footer.css";
+@import "./forms.css";
 
 * {
   box-sizing: border-box;
