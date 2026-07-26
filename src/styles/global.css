@@ -5,6 +5,8 @@
 @import "./accessibility.css";
 @import "./components.css";
 @import "./layout.css";
+@import "./header.css";
+@import "./sidebar.css";
 
 * {
   box-sizing: border-box;

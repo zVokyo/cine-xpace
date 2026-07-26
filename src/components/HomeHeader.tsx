@@ -5,7 +5,9 @@ type HomeHeaderProps = {
   theme: Theme
   sidebarOpen: boolean
   setTheme: (value: Theme) => void
-  setSidebarOpen: (value: boolean) => void
+  setSidebarOpen: (
+    value: boolean
+  ) => void
   onLogout: () => void
 }
 
@@ -20,66 +22,32 @@ function HomeHeader({
   const isDark = theme === "dark"
 
   function toggleTheme() {
-    setTheme(isDark ? "light" : "dark")
+    setTheme(
+      isDark ? "light" : "dark"
+    )
   }
 
   return (
-    <header
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "16px",
-        flexWrap: "wrap",
-        marginBottom: "24px",
-        padding: "16px",
-        border: isDark
-          ? "1px solid #27272a"
-          : "1px solid #d4d4d8",
-        borderRadius: "14px",
-        background: isDark
-          ? "#18181b"
-          : "#ffffff",
-        color: isDark
-          ? "#ffffff"
-          : "#18181b",
-      }}
-    >
+    <header className="home-header fade-in">
       <div>
-        <h1
-          style={{
-            margin: 0,
-            fontSize: "22px",
-          }}
-        >
+        <h1 className="home-header__title">
           Cine Xpace
         </h1>
 
-        <p
-          style={{
-            margin: "4px 0 0",
-            color: isDark
-              ? "#a1a1aa"
-              : "#52525b",
-          }}
-        >
+        <p className="home-header__greeting">
           Olá, {username}
         </p>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="home-header__actions">
         <button
           type="button"
+          className="primary-button"
           onClick={() =>
-            setSidebarOpen(!sidebarOpen)
+            setSidebarOpen(
+              !sidebarOpen
+            )
           }
-          style={primaryButtonStyle}
         >
           {sidebarOpen
             ? "Fechar menu"
@@ -88,13 +56,8 @@ function HomeHeader({
 
         <button
           type="button"
+          className="secondary-button"
           onClick={toggleTheme}
-          style={{
-            ...secondaryButtonStyle,
-            color: isDark
-              ? "#ffffff"
-              : "#18181b",
-          }}
         >
           {isDark
             ? "☀️ Tema claro"
@@ -103,43 +66,14 @@ function HomeHeader({
 
         <button
           type="button"
+          className="danger-button"
           onClick={onLogout}
-          style={dangerButtonStyle}
         >
           Sair
         </button>
       </div>
     </header>
   )
-}
-
-const primaryButtonStyle = {
-  padding: "10px 14px",
-  border: "none",
-  borderRadius: "10px",
-  background: "#7c3aed",
-  color: "#ffffff",
-  fontWeight: 700,
-  cursor: "pointer",
-}
-
-const secondaryButtonStyle = {
-  padding: "10px 14px",
-  border: "1px solid #52525b",
-  borderRadius: "10px",
-  background: "transparent",
-  fontWeight: 700,
-  cursor: "pointer",
-}
-
-const dangerButtonStyle = {
-  padding: "10px 14px",
-  border: "1px solid #ef4444",
-  borderRadius: "10px",
-  background: "transparent",
-  color: "#f87171",
-  fontWeight: 700,
-  cursor: "pointer",
 }
 
 export default HomeHeader
