@@ -2,6 +2,7 @@
 @import "./themes.css";
 @import "./animations.css";
 @import "./responsive.css";
+@import "./accessibility.css";
 
 * {
   box-sizing: border-box;
@@ -9,6 +10,11 @@
 
 html {
   color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
@@ -25,8 +31,8 @@ body {
   background: var(--color-background);
   color: var(--color-text);
   transition:
-    background .25s,
-    color .25s;
+    background 0.25s,
+    color 0.25s;
 }
 
 button,
@@ -39,12 +45,12 @@ textarea {
 button {
   touch-action: manipulation;
   transition:
-    background .2s,
-    color .2s,
-    transform .2s;
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   transform: translateY(-1px);
 }
 
@@ -58,7 +64,8 @@ video {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
-textarea:focus-visible {
+textarea:focus-visible,
+a:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;
 }
