@@ -9,6 +9,7 @@
 @import "./sidebar.css";
 @import "./footer.css";
 @import "./forms.css";
+@import "./tables.css";
 
 * {
   box-sizing: border-box;
