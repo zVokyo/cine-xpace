@@ -1,26 +1,13 @@
-type Props = {
-  children: React.ReactNode
-}
+import type { PropsWithChildren } from "react"
 
-function PageContainer({ children }: Props) {
+type PageContainerProps = PropsWithChildren
+
+function PageContainer({
+  children,
+}: PageContainerProps) {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "#09090f",
-        color: "#fff",
-        padding: "24px",
-        display: "flex",
-        justifyContent: "center",
-        boxSizing: "border-box",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "1280px",
-        }}
-      >
+    <main className="page">
+      <div className="wrapper">
         {children}
       </div>
     </main>

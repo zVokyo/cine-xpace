@@ -1,20 +1,10 @@
-type Props = {
-  children: React.ReactNode
-}
+import type { PropsWithChildren } from "react"
 
-function SectionTitle({ children }: Props) {
+function SectionTitle({
+  children,
+}: PropsWithChildren) {
   return (
-    <h2
-      style={{
-        margin: "0 0 18px",
-        color: "#fff",
-        fontSize: "24px",
-        fontWeight: 700,
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-      }}
-    >
+    <h2 className="section-title">
       {children}
     </h2>
   )
