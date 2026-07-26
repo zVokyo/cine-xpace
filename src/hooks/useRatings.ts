@@ -1,19 +1,89 @@
-import { useState } from "react"
-import { getRatings, saveRatings } from "../utils/ratings"
+import {
+  useEffect,
+  useState,
+} from "react"
 
-export function useRatings() {
-  const [ratings, setRatings] = useState<Record<string, number>>(getRatings())
+import type {
+  Ratings,
+} from "../types"
 
-  function rateChannel(channelName: string, value: number) {
-    const updated = {
-      ...ratings,
-      [channelName]: value,
+const RATINGS_STORAGE_KEY =
+  "cine-xpace-ratings"
+
+function getInitialRatings(): Ratings {
+  const savedRatings =
+    localStorage.getItem(
+      RATINGS_STORAGE_KEY
+    )
+
+  if (!savedRatings) {
+    return {}
+  }
+
+  try {
+    const parsedRatings: unknown =
+      JSON.parse(savedRatings)
+
+    if (
+      typeof parsedRatings !== "object" ||
+      parsedRatings === null ||
+      Array.isArray(parsedRatings)
+    ) {
+      return {}
     }
 
-    setRatings(updated)
-    saveRatings(updated)
+    const validRatings: Ratings = {}
 
-    return updated
+    for (
+      const [channelName, value]
+      of Object.entries(parsedRatings)
+    ) {
+      if (
+        typeof value === "number" &&
+        value >= 1 &&
+        value <= 5
+      ) {
+        validRatings[channelName] =
+          value
+      }
+    }
+
+    return validRatings
+  } catch {
+    return {}
+  }
+}
+
+export function useRatings() {
+  const [ratings, setRatings] =
+    useState<Ratings>(
+      getInitialRatings
+    )
+
+  useEffect(() => {
+    localStorage.setItem(
+      RATINGS_STORAGE_KEY,
+      JSON.stringify(ratings)
+    )
+  }, [ratings])
+
+  function rateChannel(
+    channelName: string,
+    rating: number
+  ) {
+    const normalizedRating =
+      Math.min(
+        5,
+        Math.max(1, rating)
+      )
+
+    setRatings(
+      (currentRatings) => ({
+        ...currentRatings,
+        [channelName]:
+          normalizedRating,
+      })
+    )
   }
 
   return {

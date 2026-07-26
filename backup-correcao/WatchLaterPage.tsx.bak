@@ -1,0 +1,7 @@
+export default function WatchLaterPage() {
+  return (
+    <main>
+      <h1>Assistir Depois</h1>
+    </main>
+  );
+}

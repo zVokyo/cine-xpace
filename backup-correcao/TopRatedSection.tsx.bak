@@ -1,0 +1,44 @@
+import type { Channel } from "../../types"
+
+type Props = {
+  channels: Channel[]
+  ratings: Record<string, number>
+  onEnter: (channel: string) => void
+}
+
+function TopRatedSection({ channels, ratings, onEnter }: Props) {
+  const topRated = [...channels]
+    .sort((a, b) => (ratings[b.name] || 0) - (ratings[a.name] || 0))
+    .slice(0, 3)
+
+  return (
+    <section style={{ marginTop: "24px" }}>
+      <h2>⭐ Mais Avaliados</h2>
+
+      <div style={{ display: "grid", gap: "16px" }}>
+        {topRated.map((channel) => (
+          <button
+            key={channel.name}
+            onClick={() => onEnter(channel.name)}
+            style={{
+              padding: "16px",
+              background: "#151525",
+              border: "1px solid #2A2A40",
+              borderRadius: "16px",
+              color: "#fff",
+              cursor: "pointer",
+              textAlign: "left",
+            }}
+          >
+            <h3>{channel.icon} {channel.name}</h3>
+            <p>🎬 {channel.category}</p>
+            <p>▶️ Agora: {channel.now}</p>
+            <p>⭐ {ratings[channel.name] || 0}/5</p>
+          </button>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export default TopRatedSection

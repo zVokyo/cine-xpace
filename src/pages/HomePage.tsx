@@ -1,22 +1,26 @@
-import ChannelRow from "../src/components/ChannelRow"
-import RecommendedSection from "../src/components/RecommendedSection"
-import TopRatedSection from "../src/components/TopRatedSection"
-import HistorySection from "../src/components/HistorySection"
-import ClearHistoryButton from "../src/components/ClearHistoryButton"
-import SearchCard from "../src/components/SearchCard"
-import type { Channel } from "../types/channel"
+import ChannelRow from "../components/ChannelRow"
+import RecommendedSection from "../components/RecommendedSection"
+import TopRatedSection from "../components/TopRatedSection"
+import HistorySection from "../components/HistorySection"
+import ClearHistoryButton from "../components/ClearHistoryButton"
+import SearchCard from "../components/SearchCard"
 
-type Props = {
+import type {
+  Channel,
+  Ratings,
+} from "../types"
+
+type HomePageProps = {
   channels: Channel[]
   filteredChannels: Channel[]
   favoriteChannels: Channel[]
-  ratings: Record<string, number>
+  ratings: Ratings
   history: string[]
   search: string
-  setSearch: (value: string) => void
   category: string
+  setSearch: (value: string) => void
   setCategory: (value: string) => void
-  onEnter: (channel: string) => void
+  onEnter: (channelName: string) => void
   onClearHistory: () => void
   onClearFilters: () => void
 }
@@ -28,39 +32,68 @@ function HomePage({
   ratings,
   history,
   search,
-  setSearch,
   category,
+  setSearch,
   setCategory,
   onEnter,
   onClearHistory,
   onClearFilters,
-}: Props) {
+}: HomePageProps) {
   return (
     <>
-      <RecommendedSection channels={channels} onEnter={onEnter} />
-      <TopRatedSection channels={channels} ratings={ratings} onEnter={onEnter} />
-      <HistorySection history={history} onEnter={onEnter} />
+      <RecommendedSection
+        channels={channels}
+        onEnter={onEnter}
+      />
+
+      <TopRatedSection
+        channels={channels}
+        ratings={ratings}
+        onEnter={onEnter}
+      />
+
+      <HistorySection
+        history={history}
+        onEnter={onEnter}
+      />
 
       {history.length > 0 && (
-        <ClearHistoryButton onClear={onClearHistory} />
+        <ClearHistoryButton
+          onClear={onClearHistory}
+        />
       )}
 
       <SearchCard
         search={search}
-        setSearch={setSearch}
         category={category}
+        setSearch={setSearch}
         setCategory={setCategory}
         onClearFilters={onClearFilters}
       />
 
       {favoriteChannels.length > 0 && (
-        <ChannelRow channels={favoriteChannels} onEnter={onEnter} />
+        <section>
+          <h2>⭐ Seus favoritos</h2>
+
+          <ChannelRow
+            channels={favoriteChannels}
+            ratings={ratings}
+            onEnter={onEnter}
+          />
+        </section>
       )}
 
-      <ChannelRow channels={filteredChannels} onEnter={onEnter} />
+      <section>
+        <h2>🎬 Todos os canais</h2>
+
+        <ChannelRow
+          channels={filteredChannels}
+          ratings={ratings}
+          onEnter={onEnter}
+        />
+      </section>
     </>
   )
 }
 
 export default HomePage
-

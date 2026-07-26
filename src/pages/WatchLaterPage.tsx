@@ -1,36 +1,35 @@
-import ChannelRow from "../src/components/ChannelRow"
-import EmptyState from "../src/components/EmptyState"
-import SectionTitle from "../src/components/SectionTitle"
-import type { Channel } from "../types/channel"
+import ChannelRow from "../components/ChannelRow"
 
-type Props = {
+import type { Channel } from "../types"
+
+type WatchLaterPageProps = {
   channels: Channel[]
-  onEnter: (channel: string) => void
+  onEnter: (channelName: string) => void
 }
 
 function WatchLaterPage({
   channels,
   onEnter,
-}: Props) {
-  return (
-    <section style={{ marginTop: "24px" }}>
-      <SectionTitle>📺 Assistir Depois</SectionTitle>
+}: WatchLaterPageProps) {
+  if (channels.length === 0) {
+    return (
+      <section>
+        <h2>📺 Assistir depois</h2>
+        <p>Nenhum canal foi adicionado à lista.</p>
+      </section>
+    )
+  }
 
-      {channels.length === 0 ? (
-        <EmptyState
-          title="Sua lista está vazia"
-          description="Adicione canais para assistir mais tarde."
-          icon="📺"
-        />
-      ) : (
-        <ChannelRow
-          channels={channels}
-          onEnter={onEnter}
-        />
-      )}
+  return (
+    <section>
+      <h2>📺 Assistir depois</h2>
+
+      <ChannelRow
+        channels={channels}
+        onEnter={onEnter}
+      />
     </section>
   )
 }
 
 export default WatchLaterPage
-

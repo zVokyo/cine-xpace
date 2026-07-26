@@ -1,0 +1,205 @@
+import LoginBox from "./components/LoginBox"
+import HomeLayout from "./components/HomeLayout"
+import PlayerPage from "./pages/PlayerPage"
+
+import { channels } from "./data/channels"
+import { getUser } from "./utils/storage"
+
+import { useAuth } from "./hooks/useAuth"
+import { useComments } from "./hooks/useComments"
+import { useFavorites } from "./hooks/useFavorites"
+import { useHistory } from "./hooks/useHistory"
+import { useProfile } from "./hooks/useProfile"
+import { useRatings } from "./hooks/useRatings"
+import { useWatchLater } from "./hooks/useWatchLater"
+import { useTheme } from "./hooks/useTheme"
+import { useCinemaMode } from "./hooks/useCinemaMode"
+import { usePage } from "./hooks/usePage"
+import { useFilters } from "./hooks/useFilters"
+import { useSidebar } from "./hooks/useSidebar"
+import { useToast } from "./hooks/useToast"
+import { usePlayer } from "./hooks/usePlayer"
+import { useChannelFilters } from "./hooks/useChannelFilters"
+import { useChannelActions } from "./hooks/useChannelActions"
+import { useChatMessages } from "./hooks/useChatMessages"
+import { useReactions } from "./hooks/useReactions"
+import { useChat } from "./hooks/useChat"
+
+function App() {
+  const { loggedIn, setLoggedIn } = useAuth()
+  const { profile, updateProfile } = useProfile()
+
+  const {
+    favorites,
+    toggleFavorite: toggleFavoriteHook,
+  } = useFavorites()
+
+  const {
+    watchLater,
+    toggleWatchLater: toggleWatchLaterHook,
+  } = useWatchLater()
+
+  const {
+    history,
+    addToHistory,
+    clearHistory: clearHistoryHook,
+  } = useHistory()
+
+  const {
+    ratings,
+    rateChannel: rateChannelHook,
+  } = useRatings()
+
+  const {
+    comments,
+    addComment: addCommentHook,
+  } = useComments()
+
+  const { theme, setTheme } = useTheme()
+  const { cinemaMode, setCinemaMode } = useCinemaMode()
+  const { page, setPage } = usePage()
+
+  const {
+    search,
+    setSearch,
+    category,
+    setCategory,
+    clearFilters: clearFiltersHook,
+  } = useFilters()
+
+  const { sidebarOpen, setSidebarOpen } = useSidebar()
+  const { toast, setToast } = useToast()
+
+  const { channel, enterChannel, leaveChannel } =
+    usePlayer(addToHistory)
+
+  const { messages, setMessages } = useChatMessages()
+  const { reactions, setReactions } = useReactions()
+
+  const {
+    text,
+    setText,
+    typing,
+    setTyping,
+    sendMessage,
+  } = useChat({
+    profile,
+    messages,
+    setMessages,
+  })
+
+  const username = profile.name || getUser()
+
+  const {
+    filteredChannels,
+    favoriteChannels,
+    watchLaterChannels,
+  } = useChannelFilters(
+    search,
+    category,
+    favorites,
+    watchLater
+  )
+
+  const {
+    toggleFavorite,
+    toggleWatchLater,
+    rateChannel,
+    addComment,
+  } = useChannelActions(
+    setToast,
+    toggleFavoriteHook,
+    toggleWatchLaterHook,
+    rateChannelHook,
+    addCommentHook
+  )
+
+  function clearHistory() {
+    clearHistoryHook()
+    setToast("Histórico limpo!")
+  }
+
+  function clearFilters() {
+    clearFiltersHook()
+    setToast("Filtros limpos!")
+  }
+
+  function handleSaveProfile(newProfile: {
+    name: string
+    avatar: string
+  }) {
+    updateProfile(newProfile)
+    setToast("Perfil salvo!")
+  }
+
+  function openNotifications() {
+    setToast("Você tem notificações!")
+  }
+
+  if (!loggedIn) {
+    return <LoginBox setLoggedIn={setLoggedIn} />
+  }
+
+  if (channel) {
+    return (
+      <PlayerPage
+        channel={channel}
+        cinemaMode={cinemaMode}
+        favorites={favorites}
+        watchLater={watchLater}
+        ratings={ratings}
+        comments={comments}
+        messages={messages}
+        text={text}
+        typing={typing}
+        reactions={reactions}
+        toast={toast}
+        setText={setText}
+        setTyping={setTyping}
+        setReactions={setReactions}
+        setToast={setToast}
+        onBack={leaveChannel}
+        onToggleCinema={() => setCinemaMode(!cinemaMode)}
+        onToggleFavorite={() => toggleFavorite(channel.name)}
+        onToggleWatchLater={() => toggleWatchLater(channel.name)}
+        onRate={(value) => rateChannel(channel.name, value)}
+        onSendMessage={sendMessage}
+        onAddComment={(comment) => addComment(channel.name, comment)}
+      />
+    )
+  }
+
+  return (
+    <HomeLayout
+      username={username}
+      profile={profile}
+      theme={theme}
+      sidebarOpen={sidebarOpen}
+      toast={toast}
+      favorites={favorites}
+      history={history}
+      page={page}
+      channels={channels}
+      filteredChannels={filteredChannels}
+      favoriteChannels={favoriteChannels}
+      watchLaterChannels={watchLaterChannels}
+      ratings={ratings}
+      search={search}
+      category={category}
+      setTheme={setTheme}
+      setLoggedIn={setLoggedIn}
+      setSidebarOpen={setSidebarOpen}
+      setPage={setPage}
+      setToast={setToast}
+      setSearch={setSearch}
+      setCategory={setCategory}
+      onSaveProfile={handleSaveProfile}
+      onNotifications={openNotifications}
+      onEnter={enterChannel}
+      onClearHistory={clearHistory}
+      onClearFilters={clearFilters}
+    />
+  )
+}
+
+export default App

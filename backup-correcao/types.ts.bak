@@ -1,0 +1,26 @@
+export type Page = "home" | "favorites" | "watchLater"
+
+export type Theme = "light" | "dark"
+
+export type Channel = {
+  name: string
+  icon: string
+  category: string
+  now: string
+  next: string[]
+  video?: string
+  description?: string
+  year?: number
+  duration?: string
+}
+
+export type Message = {
+  user: string
+  avatar: string
+  text: string
+}
+
+export type Profile = {
+  name: string
+  avatar: string
+}

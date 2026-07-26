@@ -1,32 +1,6 @@
-import BackButton from "../src/components/BackButton"
-import FavoriteButton from "../src/components/FavoriteButton"
-import WatchLaterButton from "../src/components/WatchLaterButton"
-import CinemaModeButton from "../src/components/CinemaModeButton"
-import FullscreenButton from "../src/components/FullscreenButton"
-import KeyboardShortcuts from "../src/components/KeyboardShortcuts"
-import VolumeControl from "../src/components/VolumeControl"
-import PlaybackSpeed from "../src/components/PlaybackSpeed"
-import SubtitlesToggle from "../src/components/SubtitlesToggle"
-import Player from "../src/components/Player"
-import ProgressBar from "../src/components/ProgressBar"
-import ViewersCount from "../src/components/ViewersCount"
-import WatchTimer from "../src/components/WatchTimer"
-import MessageCounter from "../src/components/MessageCounter"
-import RatingBox from "../src/components/RatingBox"
-import Reactions from "../src/components/Reactions"
-import Chat from "../src/components/Chat"
-import CommentsBox from "../src/components/CommentsBox"
-import MiniPlayer from "../src/components/MiniPlayer"
-import ToastContainer from "../src/components/ToastContainer"
-import type { Channel } from "../types/channel"
+import type { Channel, Message } from "../types"
 
-type Message = {
-  user: string
-  avatar: string
-  text: string
-}
-
-type Props = {
+type PlayerPageProps = {
   channel: Channel
   cinemaMode: boolean
   favorites: string[]
@@ -62,11 +36,9 @@ function PlayerPage({
   text,
   typing,
   reactions,
-  toast,
   setText,
   setTyping,
   setReactions,
-  setToast,
   onBack,
   onToggleCinema,
   onToggleFavorite,
@@ -74,33 +46,88 @@ function PlayerPage({
   onRate,
   onSendMessage,
   onAddComment,
-}: Props) {
-  return (
-    <main style={{ minHeight: "100vh", background: cinemaMode ? "black" : "#09090f", color: "white", padding: cinemaMode ? "8px" : "24px" }}>
-      <BackButton onBack={onBack} />
-      <FavoriteButton isFavorite={favorites.includes(channel.name)} onToggle={onToggleFavorite} />
-      <WatchLaterButton isSaved={watchLater.includes(channel.name)} onToggle={onToggleWatchLater} />
-      <CinemaModeButton cinemaMode={cinemaMode} onToggle={onToggleCinema} />
-      <FullscreenButton />
-      <KeyboardShortcuts toggleCinemaMode={onToggleCinema} />
-      <VolumeControl />
-      <PlaybackSpeed />
-      <SubtitlesToggle />
+}: PlayerPageProps) {
+  const isFavorite = favorites.includes(channel.name)
+  const isWatchLater = watchLater.includes(channel.name)
+  const rating = ratings[channel.name] || 0
+  const channelComments = comments[channel.name] || []
 
-      <Player channel={channel} />
-      <ProgressBar progress={65} />
-      <ViewersCount count={128} />
-      <WatchTimer />
-      <MessageCounter count={messages.length} />
-      <RatingBox rating={ratings[channel.name] || 0} setRating={onRate} />
-      <Reactions reactions={reactions} setReactions={setReactions} />
-      <Chat messages={messages} text={text} typing={typing} setText={setText} setTyping={setTyping} sendMessage={onSendMessage} />
-      <CommentsBox comments={comments[channel.name] || []} onAddComment={onAddComment} />
-      <MiniPlayer channelName={channel.name} />
-      <ToastContainer message={toast} onClose={() => setToast("")} />
+  return (
+    <main style={{ minHeight: "100vh", background: "#09090f", color: "white", padding: 24 }}>
+      <button onClick={onBack}>⬅ Voltar</button>
+
+      <h1>{channel.icon} {channel.name}</h1>
+      <p>{channel.now}</p>
+
+      <div style={{ background: "#111827", padding: 24, borderRadius: 12, marginTop: 16 }}>
+        {channel.video ? (
+          <video src={channel.video} controls style={{ width: "100%" }} />
+        ) : (
+          <p>Vídeo não disponível.</p>
+        )}
+      </div>
+
+      <button onClick={onToggleCinema}>
+        {cinemaMode ? "Sair do modo cinema" : "Modo cinema"}
+      </button>
+
+      <button onClick={onToggleFavorite}>
+        {isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+      </button>
+
+      <button onClick={onToggleWatchLater}>
+        {isWatchLater ? "Remover de assistir depois" : "Assistir depois"}
+      </button>
+
+      <h3>Avaliação: {rating} ⭐</h3>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button key={star} onClick={() => onRate(star)}>
+          ⭐
+        </button>
+      ))}
+
+      <h3>Próximos</h3>
+      {channel.next.map((item) => (
+        <p key={item}>{item}</p>
+      ))}
+
+      <h3>Chat</h3>
+      {messages.map((message, index) => (
+        <p key={index}>
+          {message.avatar} <strong>{message.user}:</strong> {message.text}
+        </p>
+      ))}
+
+      {typing && <p>Digitando...</p>}
+
+      <input
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value)
+          setTyping(true)
+        }}
+        placeholder="Digite sua mensagem..."
+      />
+
+      <button onClick={onSendMessage}>Enviar</button>
+
+      <h3>Reações</h3>
+      <button onClick={() => setReactions([...reactions, "❤️"])}>❤️</button>
+      <button onClick={() => setReactions([...reactions, "🔥"])}>🔥</button>
+      <button onClick={() => setReactions([...reactions, "👏"])}>👏</button>
+
+      <p>{reactions.join(" ")}</p>
+
+      <h3>Comentários</h3>
+      <button onClick={() => onAddComment("Muito bom!")}>
+        Comentar: Muito bom!
+      </button>
+
+      {channelComments.map((comment, index) => (
+        <p key={index}>💬 {comment}</p>
+      ))}
     </main>
   )
 }
 
 export default PlayerPage
-

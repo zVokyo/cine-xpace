@@ -1,19 +1,30 @@
-import { load, save } from "./storageHelper"
+import type { Profile } from "../types"
 
-type Profile = {
-  name: string
-  avatar: string
+const KEY = "cinexpace-profile"
+
+const defaultProfile: Profile = {
+  name: "Usuário",
+  avatar: "👤",
 }
 
-const KEY = "profile"
-
 export function getProfile(): Profile {
-  return load(KEY, {
-    name: "Visitante",
-    avatar: "👤",
-  })
+  const data = localStorage.getItem(KEY)
+
+  if (!data) {
+    return defaultProfile
+  }
+
+  try {
+    return JSON.parse(data)
+  } catch {
+    return defaultProfile
+  }
 }
 
 export function saveProfile(profile: Profile) {
-  save(KEY, profile)
+  localStorage.setItem(KEY, JSON.stringify(profile))
+}
+
+export function clearProfile() {
+  localStorage.removeItem(KEY)
 }

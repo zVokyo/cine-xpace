@@ -1,0 +1,29 @@
+import { channels } from "../data/channels"
+
+export function useChannelFilters(
+  search: string,
+  category: string,
+  favorites: string[],
+  watchLater: string[]
+) {
+  const filteredChannels = channels.filter((channel) => {
+    const matchesSearch = channel.name.toLowerCase().includes(search.toLowerCase())
+    const matchesCategory = category === "Todos" || channel.category === category
+
+    return matchesSearch && matchesCategory
+  })
+
+  const favoriteChannels = channels.filter((channel) =>
+    favorites.includes(channel.name)
+  )
+
+  const watchLaterChannels = channels.filter((channel) =>
+    watchLater.includes(channel.name)
+  )
+
+  return {
+    filteredChannels,
+    favoriteChannels,
+    watchLaterChannels,
+  }
+}

@@ -1,21 +1,29 @@
-import { useState } from "react"
-import { getLogin } from "../utils/storage"
+import { useEffect, useState } from "react"
+
+const AUTH_STORAGE_KEY =
+  "cine-xpace-logged-in"
+
+function getInitialLoggedIn() {
+  return (
+    localStorage.getItem(
+      AUTH_STORAGE_KEY
+    ) === "true"
+  )
+}
 
 export function useAuth() {
-  const [loggedIn, setLoggedIn] = useState(getLogin())
+  const [loggedIn, setLoggedIn] =
+    useState(getInitialLoggedIn)
 
-  function login() {
-    setLoggedIn(true)
-  }
-
-  function logout() {
-    setLoggedIn(false)
-  }
+  useEffect(() => {
+    localStorage.setItem(
+      AUTH_STORAGE_KEY,
+      String(loggedIn)
+    )
+  }, [loggedIn])
 
   return {
     loggedIn,
-    login,
-    logout,
     setLoggedIn,
   }
 }

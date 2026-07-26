@@ -1,0 +1,11 @@
+export type Channel = {
+  name: string
+  icon: string
+  category: string
+  now: string
+  next: string[]
+  video?: string
+  description?: string
+  year?: number
+  duration?: string
+}

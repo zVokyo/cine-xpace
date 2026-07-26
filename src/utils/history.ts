@@ -1,11 +1,23 @@
-import { load, save } from "./storageHelper"
+const KEY = "cinexpace-history"
 
-const KEY = "history"
+export function getHistory(): string[] {
+  const data = localStorage.getItem(KEY)
 
-export function getHistory() {
-  return load<string[]>(KEY, [])
+  if (!data) {
+    return []
+  }
+
+  try {
+    return JSON.parse(data)
+  } catch {
+    return []
+  }
 }
 
 export function saveHistory(history: string[]) {
-  save(KEY, history)
+  localStorage.setItem(KEY, JSON.stringify(history))
+}
+
+export function clearHistory() {
+  localStorage.removeItem(KEY)
 }

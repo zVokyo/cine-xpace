@@ -1,17 +1,13 @@
-export function saveLogin(username: string) {
-  localStorage.setItem("cine_xpace_logged", "true")
-  localStorage.setItem("cine_xpace_user", username)
-}
-
-export function removeLogin() {
-  localStorage.removeItem("cine_xpace_logged")
-  localStorage.removeItem("cine_xpace_user")
-}
-
-export function getLogin() {
-  return localStorage.getItem("cine_xpace_logged") === "true"
-}
+const USER_KEY = "cinexpace-user"
 
 export function getUser() {
-  return localStorage.getItem("cine_xpace_user") || "Visitante"
+  return localStorage.getItem(USER_KEY) || "Usuário"
+}
+
+export function saveUser(name: string) {
+  localStorage.setItem(USER_KEY, name)
+}
+
+export function clearUser() {
+  localStorage.removeItem(USER_KEY)
 }
