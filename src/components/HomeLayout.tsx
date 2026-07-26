@@ -2,7 +2,7 @@ import Footer from "./Footer"
 import HomeContent from "./HomeContent"
 import HomeHeader from "./HomeHeader"
 import HomePages from "./HomePages"
-import ResponsiveWrapper from "./ResponsiveWrapper"
+import PageContainer from "./PageContainer"
 import Sidebar from "./Sidebar"
 
 import type {
@@ -72,65 +72,50 @@ function HomeLayout({
   onClearHistory,
   onClearFilters,
 }: HomeLayoutProps) {
-  const isDark = theme === "dark"
-
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        padding: "24px",
-        background: isDark
-          ? "#09090f"
-          : "#f4f4f5",
-        color: isDark
-          ? "#ffffff"
-          : "#18181b",
-      }}
-    >
-      <ResponsiveWrapper>
-        <HomeHeader
-          username={username}
-          theme={theme}
-          sidebarOpen={sidebarOpen}
-          setTheme={setTheme}
-          setSidebarOpen={setSidebarOpen}
-          onLogout={onLogout}
-        />
+    <PageContainer>
+      <HomeHeader
+        username={username}
+        theme={theme}
+        sidebarOpen={sidebarOpen}
+        setTheme={setTheme}
+        setSidebarOpen={setSidebarOpen}
+        onLogout={onLogout}
+      />
 
-        {sidebarOpen && <Sidebar />}
+      {sidebarOpen && <Sidebar />}
 
-        <HomeContent
-          profile={profile}
-          theme={theme}
-          toast={toast}
-          history={history}
-          favoriteChannels={favoriteChannels}
-          setPage={setPage}
-          setToast={setToast}
-          onSaveProfile={onSaveProfile}
-          onNotifications={onNotifications}
-        />
+      <HomeContent
+        profile={profile}
+        theme={theme}
+        toast={toast}
+        history={history}
+        favoriteChannels={favoriteChannels}
+        setPage={setPage}
+        setToast={setToast}
+        onSaveProfile={onSaveProfile}
+        onNotifications={onNotifications}
+      />
 
-        <HomePages
-          page={page}
-          channels={channels}
-          filteredChannels={filteredChannels}
-          favoriteChannels={favoriteChannels}
-          watchLaterChannels={watchLaterChannels}
-          ratings={ratings}
-          history={history}
-          search={search}
-          category={category}
-          setSearch={setSearch}
-          setCategory={setCategory}
-          onEnter={onEnter}
-          onClearHistory={onClearHistory}
-          onClearFilters={onClearFilters}
-        />
+      <HomePages
+        page={page}
+        channels={channels}
+        filteredChannels={filteredChannels}
+        favoriteChannels={favoriteChannels}
+        watchLaterChannels={watchLaterChannels}
+        ratings={ratings}
+        history={history}
+        search={search}
+        category={category}
+        setSearch={setSearch}
+        setCategory={setCategory}
+        onEnter={onEnter}
+        onClearHistory={onClearHistory}
+        onClearFilters={onClearFilters}
+      />
 
-        <Footer />
-      </ResponsiveWrapper>
-    </main>
+      <Footer />
+    </PageContainer>
   )
 }
 

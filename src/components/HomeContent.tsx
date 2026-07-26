@@ -1,7 +1,7 @@
-import HomeOverview from "./HomeOverview"
-import EditProfile from "./EditProfile"
-import NavigationMenu from "./NavigationMenu"
 import DashboardSummary from "./DashboardSummary"
+import EditProfile from "./EditProfile"
+import HomeOverview from "./HomeOverview"
+import NavigationMenu from "./NavigationMenu"
 
 import type {
   Channel,
@@ -34,13 +34,11 @@ function HomeContent({
   onNotifications,
 }: HomeContentProps) {
   return (
-    <>
+    <section className="stack fade-in">
       <HomeOverview
         toast={toast}
         setToast={setToast}
-        onNotifications={
-          onNotifications
-        }
+        onNotifications={onNotifications}
       />
 
       <EditProfile
@@ -60,7 +58,7 @@ function HomeContent({
         }
         historyCount={history.length}
       />
-    </>
+    </section>
   )
 }
 
