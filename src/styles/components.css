@@ -4,10 +4,38 @@
 }
 
 .card {
-  background: var(--color-surface);
+  padding: 16px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 16px;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.channel-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.channel-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.channel-card h3,
+.channel-card p {
+  margin: 0;
+}
+
+.channel-card__secondary {
+  color: var(--color-text-secondary);
+}
+
+.channel-card__rating {
+  color: #facc15;
 }
 
 .primary-button {
@@ -16,12 +44,16 @@
   border-radius: var(--radius-sm);
   background: var(--color-primary);
   color: #ffffff;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.primary-button:hover {
+.primary-button:hover:not(:disabled) {
   background: var(--color-primary-hover);
+}
+
+.channel-card .primary-button {
+  margin-top: auto;
 }
 
 .secondary-button {
@@ -35,6 +67,7 @@
 
 .input {
   width: 100%;
+  min-width: 0;
   padding: 11px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -45,4 +78,9 @@
 .section-title {
   margin: 0 0 16px;
   font-size: 1.4rem;
+}
+
+.empty-message {
+  margin: 16px 0;
+  color: var(--color-text-secondary);
 }

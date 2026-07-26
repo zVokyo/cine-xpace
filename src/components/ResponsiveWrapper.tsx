@@ -1,16 +1,12 @@
-type Props = {
-  children: React.ReactNode
-}
+import type {
+  PropsWithChildren,
+} from "react"
 
-function ResponsiveWrapper({ children }: Props) {
+function ResponsiveWrapper({
+  children,
+}: PropsWithChildren) {
   return (
-    <div
-      style={{
-        width: "100%",
-        maxWidth: "1200px",
-        margin: "0 auto",
-      }}
-    >
+    <div className="wrapper">
       {children}
     </div>
   )

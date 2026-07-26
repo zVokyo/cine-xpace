@@ -4,6 +4,7 @@
 @import "./responsive.css";
 @import "./accessibility.css";
 @import "./components.css";
+@import "./layout.css";
 
 * {
   box-sizing: border-box;
