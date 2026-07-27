@@ -12,9 +12,9 @@ export function useToast() {
     useState("")
 
   const timeoutRef =
-    useRef<ReturnType<typeof setTimeout> | null>(
-      null
-    )
+    useRef<ReturnType<
+      typeof setTimeout
+    > | null>(null)
 
   const clearToast = useCallback(() => {
     if (timeoutRef.current) {
@@ -39,11 +39,10 @@ export function useToast() {
       }
 
       timeoutRef.current = setTimeout(() => {
-        setToastState("")
-        timeoutRef.current = null
+        clearToast()
       }, TOAST_DURATION)
     },
-    []
+    [clearToast]
   )
 
   useEffect(() => {

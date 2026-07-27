@@ -1,4 +1,7 @@
-export function load<T>(key: string, defaultValue: T): T {
+export function load<T>(
+  key: string,
+  defaultValue: T
+): T {
   try {
     const value = localStorage.getItem(key)
 
@@ -12,14 +15,34 @@ export function load<T>(key: string, defaultValue: T): T {
   }
 }
 
-export function save<T>(key: string, value: T) {
-  localStorage.setItem(key, JSON.stringify(value))
+export function save<T>(
+  key: string,
+  value: T
+): void {
+  try {
+    localStorage.setItem(
+      key,
+      JSON.stringify(value)
+    )
+  } catch {
+    // Ignora erros de armazenamento
+  }
 }
 
-export function remove(key: string) {
-  localStorage.removeItem(key)
+export function remove(
+  key: string
+): void {
+  try {
+    localStorage.removeItem(key)
+  } catch {
+    // Ignora erros de armazenamento
+  }
 }
 
-export function clear() {
-  localStorage.clear()
+export function clear(): void {
+  try {
+    localStorage.clear()
+  } catch {
+    // Ignora erros de armazenamento
+  }
 }

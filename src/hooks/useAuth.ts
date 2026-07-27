@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
 
-const AUTH_STORAGE_KEY =
-  "cine-xpace-logged-in"
+import { STORAGE_KEYS } from "../constants/storage"
 
 function getInitialLoggedIn() {
   return (
     localStorage.getItem(
-      AUTH_STORAGE_KEY
+      STORAGE_KEYS.loggedIn
     ) === "true"
   )
 }
@@ -17,9 +16,15 @@ export function useAuth() {
 
   useEffect(() => {
     localStorage.setItem(
-      AUTH_STORAGE_KEY,
+      STORAGE_KEYS.loggedIn,
       String(loggedIn)
     )
+
+    if (!loggedIn) {
+      localStorage.removeItem(
+        STORAGE_KEYS.user
+      )
+    }
   }, [loggedIn])
 
   return {

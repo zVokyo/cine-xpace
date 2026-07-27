@@ -1,8 +1,15 @@
-import { useEffect, useState } from "react"
+import {
+  useEffect,
+  useState,
+} from "react"
+
+import { STORAGE_KEYS } from "../constants/storage"
+import {
+  load,
+  save,
+} from "../utils/storageHelper"
 
 import type { Profile } from "../types"
-
-const PROFILE_STORAGE_KEY = "cine-xpace-profile"
 
 const defaultProfile: Profile = {
   name: "Usuário",
@@ -10,30 +17,21 @@ const defaultProfile: Profile = {
 }
 
 function getInitialProfile(): Profile {
-  const savedProfile = localStorage.getItem(
-    PROFILE_STORAGE_KEY
+  const savedProfile = load<Partial<Profile>>(
+    STORAGE_KEYS.profile,
+    defaultProfile
   )
 
-  if (!savedProfile) {
-    return defaultProfile
-  }
+  return {
+    name:
+      typeof savedProfile.name === "string"
+        ? savedProfile.name
+        : defaultProfile.name,
 
-  try {
-    const parsedProfile =
-      JSON.parse(savedProfile) as Partial<Profile>
-
-    return {
-      name:
-        typeof parsedProfile.name === "string"
-          ? parsedProfile.name
-          : defaultProfile.name,
-      avatar:
-        typeof parsedProfile.avatar === "string"
-          ? parsedProfile.avatar
-          : defaultProfile.avatar,
-    }
-  } catch {
-    return defaultProfile
+    avatar:
+      typeof savedProfile.avatar === "string"
+        ? savedProfile.avatar
+        : defaultProfile.avatar,
   }
 }
 
@@ -42,9 +40,9 @@ export function useProfile() {
     useState<Profile>(getInitialProfile)
 
   useEffect(() => {
-    localStorage.setItem(
-      PROFILE_STORAGE_KEY,
-      JSON.stringify(profile)
+    save(
+      STORAGE_KEYS.profile,
+      profile
     )
   }, [profile])
 

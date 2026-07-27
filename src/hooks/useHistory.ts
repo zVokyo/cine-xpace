@@ -1,34 +1,30 @@
-import { useEffect, useState } from "react"
+import {
+  useEffect,
+  useState,
+} from "react"
 
-const HISTORY_STORAGE_KEY =
-  "cine-xpace-history"
+import { STORAGE_KEYS } from "../constants/storage"
+import {
+  load,
+  save,
+} from "../utils/storageHelper"
 
 function getInitialHistory(): string[] {
-  const savedHistory = localStorage.getItem(
-    HISTORY_STORAGE_KEY
+  const savedHistory = load<unknown>(
+    STORAGE_KEYS.history,
+    []
   )
 
-  if (!savedHistory) {
-    return []
+  if (
+    Array.isArray(savedHistory) &&
+    savedHistory.every(
+      (item) => typeof item === "string"
+    )
+  ) {
+    return savedHistory
   }
 
-  try {
-    const parsedHistory: unknown =
-      JSON.parse(savedHistory)
-
-    if (
-      Array.isArray(parsedHistory) &&
-      parsedHistory.every(
-        (item) => typeof item === "string"
-      )
-    ) {
-      return parsedHistory
-    }
-
-    return []
-  } catch {
-    return []
-  }
+  return []
 }
 
 export function useHistory() {
@@ -36,9 +32,9 @@ export function useHistory() {
     useState<string[]>(getInitialHistory)
 
   useEffect(() => {
-    localStorage.setItem(
-      HISTORY_STORAGE_KEY,
-      JSON.stringify(history)
+    save(
+      STORAGE_KEYS.history,
+      history
     )
   }, [history])
 
@@ -46,14 +42,14 @@ export function useHistory() {
     channelName: string
   ) {
     setHistory((currentHistory) => {
-      const historyWithoutChannel =
+      const updatedHistory =
         currentHistory.filter(
           (name) => name !== channelName
         )
 
       return [
         channelName,
-        ...historyWithoutChannel,
+        ...updatedHistory,
       ].slice(0, 20)
     })
   }

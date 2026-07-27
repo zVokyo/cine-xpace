@@ -1,30 +1,45 @@
-import type { Profile } from "../types"
+import { STORAGE_KEYS } from "../constants/storage"
+import {
+  load,
+  remove,
+  save,
+} from "./storageHelper"
 
-const KEY = "cinexpace-profile"
+export type UserProfile = {
+  name: string
+  avatar: string
+}
 
-const defaultProfile: Profile = {
+const DEFAULT_PROFILE: UserProfile = {
   name: "Usuário",
-  avatar: "👤",
+  avatar: "",
 }
 
-export function getProfile(): Profile {
-  const data = localStorage.getItem(KEY)
+export function getProfile(): UserProfile {
+  const profile = load<Partial<UserProfile>>(
+    STORAGE_KEYS.profile,
+    DEFAULT_PROFILE
+  )
 
-  if (!data) {
-    return defaultProfile
+  return {
+    name:
+      typeof profile.name === "string"
+        ? profile.name
+        : DEFAULT_PROFILE.name,
+
+    avatar:
+      typeof profile.avatar === "string"
+        ? profile.avatar
+        : DEFAULT_PROFILE.avatar,
   }
-
-  try {
-    return JSON.parse(data)
-  } catch {
-    return defaultProfile
-  }
 }
 
-export function saveProfile(profile: Profile) {
-  localStorage.setItem(KEY, JSON.stringify(profile))
+export function saveProfile(
+  profile: UserProfile
+): void {
+  save(STORAGE_KEYS.profile, profile)
 }
 
-export function clearProfile() {
-  localStorage.removeItem(KEY)
+export function clearProfile(): void {
+  remove(STORAGE_KEYS.profile)
 }

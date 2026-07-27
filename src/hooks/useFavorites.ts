@@ -1,34 +1,30 @@
-import { useEffect, useState } from "react"
+import {
+  useEffect,
+  useState,
+} from "react"
 
-const FAVORITES_STORAGE_KEY =
-  "cine-xpace-favorites"
+import { STORAGE_KEYS } from "../constants/storage"
+import {
+  load,
+  save,
+} from "../utils/storageHelper"
 
 function getInitialFavorites(): string[] {
-  const savedFavorites = localStorage.getItem(
-    FAVORITES_STORAGE_KEY
+  const savedFavorites = load<unknown>(
+    STORAGE_KEYS.favorites,
+    []
   )
 
-  if (!savedFavorites) {
-    return []
+  if (
+    Array.isArray(savedFavorites) &&
+    savedFavorites.every(
+      (item) => typeof item === "string"
+    )
+  ) {
+    return savedFavorites
   }
 
-  try {
-    const parsedFavorites: unknown =
-      JSON.parse(savedFavorites)
-
-    if (
-      Array.isArray(parsedFavorites) &&
-      parsedFavorites.every(
-        (item) => typeof item === "string"
-      )
-    ) {
-      return parsedFavorites
-    }
-
-    return []
-  } catch {
-    return []
-  }
+  return []
 }
 
 export function useFavorites() {
@@ -36,9 +32,9 @@ export function useFavorites() {
     useState<string[]>(getInitialFavorites)
 
   useEffect(() => {
-    localStorage.setItem(
-      FAVORITES_STORAGE_KEY,
-      JSON.stringify(favorites)
+    save(
+      STORAGE_KEYS.favorites,
+      favorites
     )
   }, [favorites])
 

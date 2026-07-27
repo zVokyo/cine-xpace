@@ -1,19 +1,22 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+
+import { load, remove, save } from "../utils/storageHelper"
+
+const STORAGE_KEY = "selectedChannel"
 
 export function useSelectedChannel() {
-  const [selectedChannel, setSelectedChannelState] = useState<string | null>(
-    localStorage.getItem("selectedChannel")
-  )
+  const [selectedChannel, setSelectedChannel] =
+    useState<string | null>(() =>
+      load<string | null>(STORAGE_KEY, null)
+    )
 
-  function setSelectedChannel(value: string | null) {
-    setSelectedChannelState(value)
-
-    if (value) {
-      localStorage.setItem("selectedChannel", value)
+  useEffect(() => {
+    if (selectedChannel) {
+      save(STORAGE_KEY, selectedChannel)
     } else {
-      localStorage.removeItem("selectedChannel")
+      remove(STORAGE_KEY)
     }
-  }
+  }, [selectedChannel])
 
   return {
     selectedChannel,

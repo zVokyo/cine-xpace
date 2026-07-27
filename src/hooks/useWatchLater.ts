@@ -1,34 +1,30 @@
-import { useEffect, useState } from "react"
+import {
+  useEffect,
+  useState,
+} from "react"
 
-const WATCH_LATER_STORAGE_KEY =
-  "cine-xpace-watch-later"
+import { STORAGE_KEYS } from "../constants/storage"
+import {
+  load,
+  save,
+} from "../utils/storageHelper"
 
 function getInitialWatchLater(): string[] {
-  const savedWatchLater = localStorage.getItem(
-    WATCH_LATER_STORAGE_KEY
+  const savedWatchLater = load<unknown>(
+    STORAGE_KEYS.watchLater,
+    []
   )
 
-  if (!savedWatchLater) {
-    return []
+  if (
+    Array.isArray(savedWatchLater) &&
+    savedWatchLater.every(
+      (item) => typeof item === "string"
+    )
+  ) {
+    return savedWatchLater
   }
 
-  try {
-    const parsedWatchLater: unknown =
-      JSON.parse(savedWatchLater)
-
-    if (
-      Array.isArray(parsedWatchLater) &&
-      parsedWatchLater.every(
-        (item) => typeof item === "string"
-      )
-    ) {
-      return parsedWatchLater
-    }
-
-    return []
-  } catch {
-    return []
-  }
+  return []
 }
 
 export function useWatchLater() {
@@ -36,9 +32,9 @@ export function useWatchLater() {
     useState<string[]>(getInitialWatchLater)
 
   useEffect(() => {
-    localStorage.setItem(
-      WATCH_LATER_STORAGE_KEY,
-      JSON.stringify(watchLater)
+    save(
+      STORAGE_KEYS.watchLater,
+      watchLater
     )
   }, [watchLater])
 

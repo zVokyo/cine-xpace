@@ -1,5 +1,8 @@
 import { useState } from "react"
 
+import { STORAGE_KEYS } from "../constants/storage"
+import { save } from "../utils/storageHelper"
+
 import InputField from "./InputField"
 import PrimaryButton from "./PrimaryButton"
 
@@ -15,10 +18,19 @@ function LoginBox({
   function login() {
     const name = username.trim()
 
-    if (!name) return
+    if (!name) {
+      return
+    }
 
-    localStorage.setItem("loggedIn", "true")
-    localStorage.setItem("user", name)
+    save(
+      STORAGE_KEYS.loggedIn,
+      true
+    )
+
+    save(
+      STORAGE_KEYS.user,
+      name
+    )
 
     setLoggedIn(true)
   }

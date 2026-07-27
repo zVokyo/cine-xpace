@@ -3,67 +3,55 @@ import {
   useState,
 } from "react"
 
-import type {
-  Ratings,
-} from "../types"
+import { STORAGE_KEYS } from "../constants/storage"
+import {
+  load,
+  save,
+} from "../utils/storageHelper"
 
-const RATINGS_STORAGE_KEY =
-  "cine-xpace-ratings"
+import type { Ratings } from "../types"
 
 function getInitialRatings(): Ratings {
-  const savedRatings =
-    localStorage.getItem(
-      RATINGS_STORAGE_KEY
-    )
+  const savedRatings = load<unknown>(
+    STORAGE_KEYS.ratings,
+    {}
+  )
 
-  if (!savedRatings) {
+  if (
+    typeof savedRatings !== "object" ||
+    savedRatings === null ||
+    Array.isArray(savedRatings)
+  ) {
     return {}
   }
 
-  try {
-    const parsedRatings: unknown =
-      JSON.parse(savedRatings)
+  const validRatings: Ratings = {}
 
+  for (
+    const [channelName, rating] of
+    Object.entries(savedRatings)
+  ) {
     if (
-      typeof parsedRatings !== "object" ||
-      parsedRatings === null ||
-      Array.isArray(parsedRatings)
+      typeof rating === "number" &&
+      Number.isFinite(rating) &&
+      rating >= 1 &&
+      rating <= 5
     ) {
-      return {}
+      validRatings[channelName] = rating
     }
-
-    const validRatings: Ratings = {}
-
-    for (
-      const [channelName, value]
-      of Object.entries(parsedRatings)
-    ) {
-      if (
-        typeof value === "number" &&
-        value >= 1 &&
-        value <= 5
-      ) {
-        validRatings[channelName] =
-          value
-      }
-    }
-
-    return validRatings
-  } catch {
-    return {}
   }
+
+  return validRatings
 }
 
 export function useRatings() {
   const [ratings, setRatings] =
-    useState<Ratings>(
-      getInitialRatings
-    )
+    useState<Ratings>(getInitialRatings)
 
   useEffect(() => {
-    localStorage.setItem(
-      RATINGS_STORAGE_KEY,
-      JSON.stringify(ratings)
+    save(
+      STORAGE_KEYS.ratings,
+      ratings
     )
   }, [ratings])
 
@@ -71,19 +59,15 @@ export function useRatings() {
     channelName: string,
     rating: number
   ) {
-    const normalizedRating =
-      Math.min(
-        5,
-        Math.max(1, rating)
-      )
-
-    setRatings(
-      (currentRatings) => ({
-        ...currentRatings,
-        [channelName]:
-          normalizedRating,
-      })
+    const normalizedRating = Math.min(
+      5,
+      Math.max(1, rating)
     )
+
+    setRatings((currentRatings) => ({
+      ...currentRatings,
+      [channelName]: normalizedRating,
+    }))
   }
 
   return {

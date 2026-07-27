@@ -3,73 +3,56 @@ import {
   useState,
 } from "react"
 
-import type {
-  Comments,
-} from "../types"
+import { STORAGE_KEYS } from "../constants/storage"
+import {
+  load,
+  save,
+} from "../utils/storageHelper"
 
-const COMMENTS_STORAGE_KEY =
-  "cine-xpace-comments"
+import type { Comments } from "../types"
 
 function getInitialComments(): Comments {
-  const savedComments =
-    localStorage.getItem(
-      COMMENTS_STORAGE_KEY
-    )
+  const savedComments = load<unknown>(
+    STORAGE_KEYS.comments,
+    {}
+  )
 
-  if (!savedComments) {
+  if (
+    typeof savedComments !== "object" ||
+    savedComments === null ||
+    Array.isArray(savedComments)
+  ) {
     return {}
   }
 
-  try {
-    const parsedComments: unknown =
-      JSON.parse(savedComments)
+  const validComments: Comments = {}
 
+  for (
+    const [channelName, comments] of
+    Object.entries(savedComments)
+  ) {
     if (
-      typeof parsedComments !==
-        "object" ||
-      parsedComments === null ||
-      Array.isArray(parsedComments)
-    ) {
-      return {}
-    }
-
-    const validComments: Comments = {}
-
-    for (
-      const [channelName, value]
-      of Object.entries(
-        parsedComments
+      Array.isArray(comments) &&
+      comments.every(
+        (comment) =>
+          typeof comment === "string"
       )
     ) {
-      if (
-        Array.isArray(value) &&
-        value.every(
-          (comment) =>
-            typeof comment ===
-            "string"
-        )
-      ) {
-        validComments[channelName] =
-          value
-      }
+      validComments[channelName] = comments
     }
-
-    return validComments
-  } catch {
-    return {}
   }
+
+  return validComments
 }
 
 export function useComments() {
   const [comments, setComments] =
-    useState<Comments>(
-      getInitialComments
-    )
+    useState<Comments>(getInitialComments)
 
   useEffect(() => {
-    localStorage.setItem(
-      COMMENTS_STORAGE_KEY,
-      JSON.stringify(comments)
+    save(
+      STORAGE_KEYS.comments,
+      comments
     )
   }, [comments])
 
@@ -77,26 +60,19 @@ export function useComments() {
     channelName: string,
     comment: string
   ) {
-    const normalizedComment =
-      comment.trim()
+    const normalizedComment = comment.trim()
 
     if (!normalizedComment) {
       return
     }
 
-    setComments(
-      (currentComments) => ({
-        ...currentComments,
-        [channelName]: [
-          ...(
-            currentComments[
-              channelName
-            ] ?? []
-          ),
-          normalizedComment,
-        ],
-      })
-    )
+    setComments((currentComments) => ({
+      ...currentComments,
+      [channelName]: [
+        ...(currentComments[channelName] ?? []),
+        normalizedComment,
+      ],
+    }))
   }
 
   return {

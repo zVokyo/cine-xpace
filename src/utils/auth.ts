@@ -1,9 +1,36 @@
-const KEY = "cinexpace-logged-in"
+import { useEffect, useState } from "react"
 
-export function getLogin() {
-  return localStorage.getItem(KEY) === "true"
+import { STORAGE_KEYS } from "../constants/storage"
+import {
+  remove,
+  load,
+  save,
+} from "../utils/storageHelper"
+
+function getInitialLoggedIn(): boolean {
+  return load<boolean>(
+    STORAGE_KEYS.loggedIn,
+    false
+  )
 }
 
-export function saveLogin(value: boolean) {
-  localStorage.setItem(KEY, String(value))
+export function useAuth() {
+  const [loggedIn, setLoggedIn] =
+    useState<boolean>(getInitialLoggedIn)
+
+  useEffect(() => {
+    save(
+      STORAGE_KEYS.loggedIn,
+      loggedIn
+    )
+
+    if (!loggedIn) {
+      remove(STORAGE_KEYS.user)
+    }
+  }, [loggedIn])
+
+  return {
+    loggedIn,
+    setLoggedIn,
+  }
 }

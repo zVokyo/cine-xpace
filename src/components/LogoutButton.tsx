@@ -1,27 +1,35 @@
+import { STORAGE_KEYS } from "../constants/storage"
+import { remove } from "../utils/storageHelper"
+
 type Props = {
   setLoggedIn: (value: boolean) => void
 }
 
-function LogoutButton({ setLoggedIn }: Props) {
+function LogoutButton({
+  setLoggedIn,
+}: Props) {
   function logout() {
-    localStorage.removeItem("loggedIn")
-    localStorage.removeItem("user")
+    remove(STORAGE_KEYS.loggedIn)
+    remove(STORAGE_KEYS.user)
+
     setLoggedIn(false)
   }
 
   return (
     <button
+      type="button"
       onClick={logout}
       style={{
-        background: "#FF4C4C",
-        color: "#fff",
+        background: "#ff4c4c",
+        color: "#ffffff",
         border: "none",
         borderRadius: "12px",
         padding: "10px 16px",
         margin: "8px 0",
         cursor: "pointer",
         fontWeight: 600,
-        boxShadow: "0 6px 16px rgba(255,76,76,.3)",
+        boxShadow:
+          "0 6px 16px rgba(255, 76, 76, 0.3)",
       }}
     >
       🚪 Sair

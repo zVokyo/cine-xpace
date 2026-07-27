@@ -1,13 +1,32 @@
-const USER_KEY = "cinexpace-user"
+import { STORAGE_KEYS } from "../constants/storage"
+import {
+  load,
+  remove,
+  save,
+} from "./storageHelper"
 
-export function getUser() {
-  return localStorage.getItem(USER_KEY) || "Usuário"
+export function getUser(): string {
+  return load<string>(
+    STORAGE_KEYS.user,
+    "Usuário"
+  )
 }
 
-export function saveUser(name: string) {
-  localStorage.setItem(USER_KEY, name)
+export function saveUser(
+  name: string
+): void {
+  const normalizedName = name.trim()
+
+  if (!normalizedName) {
+    return
+  }
+
+  save(
+    STORAGE_KEYS.user,
+    normalizedName
+  )
 }
 
-export function clearUser() {
-  localStorage.removeItem(USER_KEY)
+export function clearUser(): void {
+  remove(STORAGE_KEYS.user)
 }
